@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>441478002895.94502@ms.pboxlabs.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Anonymous, disposable, and free hosted email for your domain, with no signup.">
+    <meta name="keywords" content="disposable email, hosted email, custom domain email, anonymous email">
+    <link id="favicon" rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+</head>
+<body>
+<div ng-app="mailsac" ng-controller="GlobalController" ng-cloak>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Mailsac</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="notifications">
+        <div ng-repeat="notif in notifications track by $index" ng-class="{{ notif.class || '' }}"
+             class="alert alert-warning">
+            <button data-dismiss="alert" ng-click="notifications.splice($index, 1)" class="close">&times;</button>
+            {{ notif.message || notif.error || notif }}
+        </div>
+    </div>
+    <div class="container">
+        <div ng-init="inbox = '441478002895.94502@ms.pboxlabs.com';" class="inbox">
+            <div ng-controller="InboxController"><h2>{{ inbox }}</h2>
+                <h3 ng-show="messages !== null">{{ messages.length }} message{{ messages.length === 1 ? "" : "s" }}</h3>
+                <br>
+                <table align="left" style="margin-left: -15px;margin-right: -15px;" class="table table-condensed">
+                    <tbody>
+                    <tr ng-show="messages === null">
+                        <td colspan="3" class="align-left">Loading...</td>
+                    </tr>
+                    <tr ng-show="messages &amp;&amp; messages.length === 0">
+                        <td colspan="3" class="align-left">No mail!</td>
+                    </tr>
+                    <tr ng-repeat="msg in messages" ng-init="msg.isVisible = false; confDelete = false;"
+                        class="clickable">
+                        <td colspan="3" ng-show="msg.isVisible" class="active not-clickable">
+                            <div class="btn-group pull-right"><a ng-href="/dirty/{{ msg._id }}" target="_blank"
+                                                                 class="btn btn-info btn-xs">Unblock links and
+                                images &nearr;</a><a ng-href="/raw/{{ msg._id }}" target="_blank"
+                                                     class="btn btn-default btn-xs">View headers &nearr;</a>
+                                <button ng-click="confDelete = true" ng-show="!confDelete"
+                                        class="btn btn-primary btn-xs">Delete...
+                                </button>
+                                <button ng-click="deleteMessage(msg)" ng-show="confDelete"
+                                        class="btn btn-primary btn-xs">Permanently delete
+                                </button>
+                                <button ng-click="confDelete = false" ng-show="confDelete"
+                                        class="btn btn-default btn-xs">Do not delete
+                                </button>
+                                <button ng-click="msg.isVisible = false" class="btn btn-danger btn-xs">Close</button>
+                            </div>
+                            <br><br>
+                            <p>{{ msg.from[0].address }}<br>{{ msg.subject }}<br>{{ moment(msg.received).fromNow() }}
+                            </p>
+                            <hr>
+                            <div ng-bind-html="trustAsHtml(msg.body)"></div>
+                        </td>
+                        <td ng-show="!msg.isVisible" ng-click="msg.isVisible = !msg.isVisible" class="col-xs-4"><strong>{{
+                            msg.from[0].address }}</strong></td>
+                        <td ng-show="!msg.isVisible" ng-click="msg.isVisible = !msg.isVisible" class="col-xs-5">{{
+                            msg.subject }}
+                        </td>
+                        <td ng-show="!msg.isVisible" ng-click="msg.isVisible = !msg.isVisible"
+                            class="col-xs-2 align-right">
+                            <small>{{ moment(msg.received).fromNow() }}</small>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="/js/mailsac.js"></script>
+</body>
+</html>
